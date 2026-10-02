@@ -1,0 +1,239 @@
+// Venstar Explorer "setup mode" protocol, recovered from the Skyport Android app 7.4.1
+// (air.com.venstar.skyport). Regenerated from the app's protobufjs JSON descriptor;
+// field names/numbers are as shipped. Wire framing: 4-byte big-endian length + Message.
+
+syntax = "proto2";
+
+package setupMode;
+
+message LOGIN {
+  required string mac = 1;
+  required string fwVer = 2;
+  required string model = 3;
+  optional string name = 4;
+}
+
+message DATETIMERESPONSE {
+  required uint32 timestamp = 1;
+}
+
+message NAME {
+  required string name = 1;
+}
+
+message READ {
+  repeated ReadWriteItem items = 1;
+}
+
+message WRITE {
+  repeated ReadWriteItem items = 1;
+}
+
+message ReadWriteItem {
+  required uint32 index = 1;
+  optional uint32 length = 2 [default = 1];
+  optional uint32 mask = 3 [default = 4294967295];
+  optional uint32 value = 4;
+}
+
+message READRESPONSE {
+  repeated ReadWriteItem items = 1;
+}
+
+message SCHEDULEACK {
+  required uint32 progPart = 1;
+  required uint32 mode = 2;
+  required uint32 csp = 3;
+  required uint32 hsp = 4;
+  optional bool progOn = 5;
+}
+
+message SCHEDULERES {
+  enum ProgTypes {
+    NONPROG = 0;
+    SINGLEDAY = 1;
+    WEEKDAY = 2;
+    SEVENDAY = 3;
+  }
+  required bool enabled = 1;
+  optional ProgTypes type = 2;
+  repeated ResidentialSchedule sched = 3;
+}
+
+message SCHEDULECOM {
+  enum ProgTypes {
+    NONPROG = 0;
+    SINGLEDAY = 1;
+    WEEKDAY = 2;
+    SEVENDAY = 3;
+  }
+  required bool enabled = 1;
+  repeated CommercialSchedule sched = 2;
+  optional uint32 unoccMode = 3;
+  optional uint32 unoccCool = 4;
+  optional uint32 unoccHeat = 5;
+  optional ProgTypes type = 6;
+}
+
+message ResidentialSchedule {
+  required uint32 day = 1;
+  required bool mornEnabled = 2;
+  required uint32 mornStart = 3;
+  required uint32 mornMode = 4;
+  required uint32 mornCool = 5;
+  required uint32 mornHeat = 6;
+  required bool dayEnabled = 7;
+  required uint32 dayStart = 8;
+  required uint32 dayMode = 9;
+  required uint32 dayCool = 10;
+  required uint32 dayHeat = 11;
+  required bool eveEnabled = 12;
+  required uint32 eveStart = 13;
+  required uint32 eveMode = 14;
+  required uint32 eveCool = 15;
+  required uint32 eveHeat = 16;
+  required bool nightEnabled = 17;
+  required uint32 nightStart = 18;
+  required uint32 nightMode = 19;
+  required uint32 nightCool = 20;
+  required uint32 nightHeat = 21;
+}
+
+message CommercialSchedule {
+  required uint32 day = 1;
+  required bool occ1Enabled = 2;
+  required uint32 occ1Start = 3;
+  required uint32 occ1Stop = 4;
+  required uint32 occ1Cool = 5;
+  required uint32 occ1Heat = 6;
+  required bool occ2Enabled = 7;
+  required uint32 occ2Start = 8;
+  required uint32 occ2Stop = 9;
+  required uint32 occ2Cool = 10;
+  required uint32 occ2Heat = 11;
+  required bool occ3Enabled = 12;
+  required uint32 occ3Start = 13;
+  required uint32 occ3Stop = 14;
+  required uint32 occ3Cool = 15;
+  required uint32 occ3Heat = 16;
+  required uint32 occ1Mode = 17;
+  required uint32 occ2Mode = 18;
+  required uint32 occ3Mode = 19;
+}
+
+message COMPROGRESPONSE {
+  required uint32 mode = 1;
+  required uint32 csp = 2;
+  required uint32 hsp = 3;
+  required bool override = 4;
+  required uint32 progPart = 5;
+  required bool forceUnocc = 6;
+  optional bool progOn = 7;
+  optional uint32 time = 8;
+}
+
+message FAILURE {
+  optional int32 code = 1;
+  optional string msg = 2;
+}
+
+message WIFICONFIG {
+  required string SSID = 1;
+  required uint32 securityType = 2;
+  required bool dhcp = 3;
+  optional string password = 4;
+  optional uint32 ipv4Address = 5;
+  optional uint32 mask = 6;
+  optional uint32 gateway = 7;
+  optional uint32 dnsAddress = 8;
+}
+
+message WIFISCANRESULTS {
+  repeated WIFISCANITEM wifiScanResults = 1;
+}
+
+message WIFISCANITEM {
+  required string SSID = 1;
+  required uint32 securityType = 2;
+  required uint32 signalStrength = 3;
+}
+
+message ENTERPRISE_CONFIG {
+  enum wpa2EapMethod_t {
+    FAST_AUTH_PROVISIONING = 0;
+    FAST_NO_PROVISIONING = 1;
+    FAST_UNAUTH_PROVISIONING = 2;
+    PEAP0_MSCHAPv2 = 3;
+    PEAP0_PSK = 4;
+    PEAP0_TLS = 5;
+    PEAP1_PSK = 6;
+    PEAP1_TLS = 7;
+    TLS = 8;
+    TTLS_MSCHAPv2 = 9;
+    TTLS_PSK = 10;
+    TTLS_TLS = 11;
+  }
+  required string SSID = 1;
+  required wpa2EapMethod_t wpa2EapMethod = 2;
+  required bool useServerAuthentication = 3;
+  optional string anonymousIdentity = 4;
+  optional string userIdentity = 5;
+  optional string userPassword = 6;
+  required bool dhcp = 7;
+  optional uint32 ipv4Address = 8;
+  optional uint32 mask = 9;
+  optional uint32 gateway = 10;
+  optional uint32 dnsAddress = 11;
+}
+
+message CERTCHUNK {
+  enum CertType {
+    ENT_CA_CERT = 1;
+    ENT_PUBLIC_CERT = 2;
+    ENT_PRIVATE_KEY = 3;
+  }
+  required uint32 chunkSequence = 1;
+  optional CertType type = 2;
+  optional bytes chunkData = 3;
+  optional uint32 checksum = 4;
+}
+
+message Message {
+  enum Commands {
+    LOGIN = 2;
+    NAME = 16;
+    READ = 17;
+    READRESPONSE = 18;
+    WRITE = 20;
+    SCHEDULEACK = 34;
+    DATETIMERESPONSE = 46;
+    SCHEDULERES = 81;
+    SCHEDULECOM = 82;
+    COMPROGRESPONSE = 83;
+    WIFICONFIG = 120;
+    WIFISCANRESULTS = 121;
+    ENTERPRISE_CONFIG = 122;
+    CERTCHUNK = 123;
+    SUCCESS = 126;
+    FAILURE = 127;
+  }
+  required Commands command = 1000;
+  required string sequence = 1001;
+  oneof data {
+    LOGIN login = 2;
+    NAME name = 16;
+    READ read = 17;
+    READRESPONSE readresponse = 18;
+    WRITE write = 20;
+    SCHEDULEACK scheduleack = 34;
+    DATETIMERESPONSE datetimeresponse = 46;
+    SCHEDULERES scheduleres = 81;
+    SCHEDULECOM schedulecom = 82;
+    COMPROGRESPONSE comprogresponse = 83;
+    WIFICONFIG wificonfig = 120;
+    WIFISCANRESULTS wifiscanresults = 121;
+    ENTERPRISE_CONFIG enterpriseConfig = 122;
+    CERTCHUNK certchunk = 123;
+    FAILURE failure = 127;
+  }
+}
